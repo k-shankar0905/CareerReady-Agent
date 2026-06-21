@@ -1,0 +1,16 @@
+{
+    "target_role": "Data Analyst",
+    "matched_skills": [
+        "SQL",
+        "Python",
+        "Excel"
+    ],
+    "missing_skills": [
+        "Power BI",
+        "Tableau"
+    ],
+    "recommendations": [
+        "Complete a Power BI dashboard visualization project.",
+        "Learn advanced Tableau features such as LOD expressions and parameters."
+    ]
+}
