@@ -62,17 +62,38 @@ The **Nudge Agent** tracks the user's weekly learning progress against a structu
 
 ---
 
+## Model Context Protocol (MCP) Servers
+
+### Job Market MCP Server (`mcp/job_mcp_server.py`)
+
+#### Description
+An MCP-compliant server called **`job-market-mcp`** implemented using the standard Python `FastMCP` framework. It exposes three tools to any host application (such as Claude Desktop or other Model Context Protocol clients) for querying the job market in real time.
+
+#### Exposed Tools
+1. **`search_jobs(role: str)`**
+   * **Purpose**: Searches for active job postings by job role from the JSearch database.
+   * **Returns**: JSON string list of job details in MCP tool response format.
+2. **`get_trending_skills(role: str)`**
+   * **Purpose**: Analyzes job listings text to identify and rank trending technical and soft skills for a given role.
+   * **Returns**: JSON string listing trending skills and count statistics.
+3. **`get_market_pulse()`**
+   * **Purpose**: Fetches general postings sample to extract broad hiring hubs, top hiring companies, and market demand sentiments.
+   * **Returns**: JSON summary of market health parameters.
+
+---
+
 ## Dependencies Required
 
 The project requires **Python 3.8+** and the following dependencies:
 
 * **`requests`**: For contacting the external JSearch API.
 * **`python-dotenv`**: For loading credentials from a local `.env` configuration file.
+* **`mcp`** (FastMCP SDK): Enables Model Context Protocol server capabilities.
 * **`google-antigravity`** (Optional/Standard SDK): Enables agent-based orchestration and LLM chat execution.
 
 Install the python dependencies using `pip`:
 ```bash
-pip install requests python-dotenv
+pip install requests python-dotenv "mcp[cli]"
 ```
 
 ---
@@ -115,3 +136,10 @@ To track your learning progress against your roadmap:
 python agents/nudge_agent.py
 ```
 *Follow the prompt to enter what you planned to learn and if you completed it.*
+
+### 4. Run the Job Market MCP Server
+To boot up the Model Context Protocol stdio transport server:
+```bash
+python mcp/job_mcp_server.py
+```
+*Note: This server communicates over standard input/output (stdio) and should be registered in your client configuration (e.g., `claude_desktop_config.json`).*
