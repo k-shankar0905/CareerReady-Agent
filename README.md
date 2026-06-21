@@ -40,6 +40,28 @@ The **Gap Analyzer Agent** assesses user readiness for a target job role. It rea
 
 ---
 
+### 3. Nudge Agent (`agents/nudge_agent.py`)
+
+#### Description
+The **Nudge Agent** tracks the user's weekly learning progress against a structured career roadmap defined in `career_roadmap.json`. It prompts the user for what they planned to learn, checks if it was completed, updates progress in `progress.json`, gives motivational messages (including why the skill is important if they failed to complete it), and displays the overall roadmap progress percentage.
+
+#### Input
+* **CLI Input**:
+  * Planned learning goal (e.g., `"Python Basics"`).
+  * Completion status (`"yes"`/`"no"`).
+* **File Input**: [career_roadmap.json](file:///c:/Users/yamuna/.antigravity-ide/CareerReady-Agent/career_roadmap.json) defining weekly goals, descriptions, and importance.
+* **Environment Variables**:
+  * `GEMINI_API_KEY`: Optional. Used for generating personalized learning nudges and advice; falls back to offline local CLI analysis if not set.
+
+#### Output
+* **Console**:
+  * Congratulates the user and displays next week's goal on completion.
+  * Motivates the user and displays the skill importance if not completed.
+  * Shows the overall roadmap completion percentage.
+* **File Output**: Updates and saves progress status to `progress.json`.
+
+---
+
 ## Dependencies Required
 
 The project requires **Python 3.8+** and the following dependencies:
@@ -86,3 +108,10 @@ To analyze your skills gap against the market requirements loaded from `skills_a
 python agents/gap_analyzer_agent.py
 ```
 *Follow the prompt to input your current skills (e.g., `Python, Excel, Tableau`).*
+
+### 3. Run the Nudge Agent
+To track your learning progress against your roadmap:
+```bash
+python agents/nudge_agent.py
+```
+*Follow the prompt to enter what you planned to learn and if you completed it.*
