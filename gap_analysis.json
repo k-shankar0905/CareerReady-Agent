@@ -1,0 +1,9 @@
+{
+  "target_role": "Full-Stack Python Developer",
+  "current_skills": ["Python", "HTML", "CSS", "Basic Javascript"],
+  "missing_skills": [
+    "FastAPI (Web Framework)",
+    "Docker & Containerization",
+    "PostgreSQL & Database Optimization"
+  ]
+}
