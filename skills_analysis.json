@@ -1,0 +1,33 @@
+{
+  "role": "Data Analyst",
+  "skills": [
+    {
+      "name": "Python",
+      "importance": "high"
+    },
+    {
+      "name": "SQL",
+      "importance": "high"
+    },
+    {
+      "name": "Excel",
+      "importance": "medium"
+    },
+    {
+      "name": "Tableau",
+      "importance": "medium"
+    },
+    {
+      "name": "Power BI",
+      "importance": "medium"
+    },
+    {
+      "name": "Statistics",
+      "importance": "medium"
+    },
+    {
+      "name": "Communication",
+      "importance": "low"
+    }
+  ]
+}
