@@ -1,0 +1,15 @@
+{
+    "readiness_score": 57,
+    "matching_skills": [
+        "SQL",
+        "Python",
+        "Excel",
+        "Tableau"
+    ],
+    "missing_skills": [
+        "Power BI",
+        "Data Modeling",
+        "Statistics",
+        "ETL"
+    ]
+}

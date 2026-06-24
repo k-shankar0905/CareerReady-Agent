@@ -1,0 +1,51 @@
+{
+    "job_role": "Data Analyst",
+    "market_skills": [
+        {
+            "skill": "SQL",
+            "demand_percentage": 95
+        },
+        {
+            "skill": "Python",
+            "demand_percentage": 85
+        },
+        {
+            "skill": "Excel",
+            "demand_percentage": 80
+        },
+        {
+            "skill": "Tableau",
+            "demand_percentage": 75
+        },
+        {
+            "skill": "Power BI",
+            "demand_percentage": 70
+        },
+        {
+            "skill": "Data Modeling",
+            "demand_percentage": 65
+        },
+        {
+            "skill": "Statistics",
+            "demand_percentage": 60
+        },
+        {
+            "skill": "ETL",
+            "demand_percentage": 55
+        }
+    ],
+    "trending_skills": [
+        {
+            "skill": "dbt",
+            "trend": "up"
+        },
+        {
+            "skill": "Snowflake",
+            "trend": "up"
+        },
+        {
+            "skill": "Python (Pandas)",
+            "trend": "stable"
+        }
+    ]
+}
