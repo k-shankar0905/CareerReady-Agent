@@ -1,6 +1,5 @@
 [
     {
-<<<<<<< HEAD
         "job_id": "mock_job_1",
         "title": "Senior Data Analyst",
         "company": "NovaTech Solutions",
@@ -71,75 +70,3 @@
         "description": "We are seeking an enthusiastic Data Analyst to join our growing team. In this role, you will apply core skills in SQL, Python, Excel, Tableau to solve challenging projects, collaborate with cross-functional partners, and deploy production-ready solutions.\n\nKey Responsibilities:\n- Architect data-driven/software tools centered on Data Analyst objectives.\n- Leverage tools like SQL, Python, Excel, Tableau, Git to support key objectives.\n- Write clean code, generate comprehensive documentations, and present key indicators to stakeholders.\n\nRequirements:\n- Bachelor's degree in CS, Data Science, Math, or equivalent field experience.\n- Solid expertise in: SQL, Python, Excel, Tableau, Power BI.\n- Strong analytical background and clear verbal/written communicator."
     }
 ]
-=======
-        "job_id": "job_01",
-        "title": "Data Analyst",
-        "company": "TechCorp",
-        "location": "San Francisco, CA",
-        "description": "We are seeking a Data Analyst. Must have strong skills in SQL, Python, and Excel. Experience with Power BI is a plus."
-    },
-    {
-        "job_id": "job_02",
-        "title": "Business Intelligence Developer",
-        "company": "DataDynamics",
-        "location": "New York, NY",
-        "description": "Join our team to build dashboards. Required: Excel, Power BI, SQL. Python knowledge is preferred."
-    },
-    {
-        "job_id": "job_03",
-        "title": "Data Scientist",
-        "company": "Innovate Solutions",
-        "location": "Remote",
-        "description": "Looking for a Data Scientist with Python, SQL, and Machine Learning expertise. Cloud experience (AWS) is helpful."
-    },
-    {
-        "job_id": "job_04",
-        "title": "Junior Data Analyst",
-        "company": "FinTech Group",
-        "location": "Chicago, IL",
-        "description": "Entry level position. Clean data using Excel, SQL. Good Communication skills are required."
-    },
-    {
-        "job_id": "job_05",
-        "title": "Senior Data Analyst",
-        "company": "Global AI Solutions",
-        "location": "Boston, MA",
-        "description": "Experienced analyst wanted. Required: SQL, Python, Tableau. Excellent Communication and Data Analysis skills."
-    },
-    {
-        "job_id": "job_06",
-        "title": "Cloud Data Engineer",
-        "company": "CloudScale",
-        "location": "Seattle, WA",
-        "description": "Build pipelines on AWS. Required: Python, SQL, Git, AWS."
-    },
-    {
-        "job_id": "job_07",
-        "title": "Data Analytics Lead",
-        "company": "Apex Systems",
-        "location": "Austin, TX",
-        "description": "Lead a team of analysts. Requires Excel, Tableau, SQL, and strong Communication."
-    },
-    {
-        "job_id": "job_08",
-        "title": "Machine Learning Engineer",
-        "company": "QuantLab",
-        "location": "Toronto, ON",
-        "description": "Research and deploy ML models. Python, Git, Machine Learning, AWS, Azure are required."
-    },
-    {
-        "job_id": "job_09",
-        "title": "Business Analyst",
-        "company": "FutureVision",
-        "location": "Denver, CO",
-        "description": "Analyze business requirements. Must be proficient in Excel, Power BI, and Communication."
-    },
-    {
-        "job_id": "job_10",
-        "title": "Data Developer",
-        "company": "CyberSec Inc",
-        "location": "London, UK",
-        "description": "Develop data applications. Required: Python, SQL, Java, Git."
-    }
-]
->>>>>>> fb27e8fa263c4e8e5e262a64d928e58cca4c8081

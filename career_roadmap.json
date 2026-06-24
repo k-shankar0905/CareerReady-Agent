@@ -1,89 +1,115 @@
 {
-<<<<<<< HEAD
+    "role": "Data Analyst",
+    "target_role": "Data Analyst",
     "weeks": [
         {
             "week": 1,
-            "topic": "Advanced SQL & Query Optimization",
-            "details": "Master window functions, Common Table Expressions (CTEs), and query tuning for analytical reporting.",
+            "topic": "Learn Python Basics",
+            "goal": "Learn Python Basics",
+            "details": "Understand variables, loops, lists, dicts, and functions in Python.",
+            "description": "Understand variables, loops, lists, dicts, and functions in Python.",
+            "importance": "Crucial for writing automated data scripts and basic manipulation.",
             "resources": [
-                "LeetCode SQL Study Plan",
-                "Mode Analytics SQL Tutorial"
+                "Python for Beginners - YouTube Course",
+                "Python 3 Official Documentation"
             ]
         },
         {
             "week": 2,
-            "topic": "Python Data Wrangling (Pandas/NumPy)",
-            "details": "Learn data cleaning, data profiling, aggregation, and preprocessing using pandas.",
+            "topic": "Learn SQL Queries",
+            "goal": "Learn SQL Queries",
+            "details": "Master SELECT, WHERE, JOIN, GROUP BY, and basic aggregations in SQL.",
+            "description": "Master SELECT, WHERE, JOIN, GROUP BY, and basic aggregations in SQL.",
+            "importance": "Essential for querying and extracting data from databases.",
             "resources": [
-                "Kaggle Pandas Course",
-                "Pandas Documentation"
+                "SQL Tutorial for Beginners - YouTube",
+                "W3Schools SQL Tutorial"
             ]
         },
         {
             "week": 3,
-            "topic": "Dashboard Design & BI Tools (Tableau/Power BI)",
-            "details": "Build interactive dashboards following data visualization and visual storytelling principles.",
+            "topic": "Learn Excel Data Analysis",
+            "goal": "Learn Excel Data Analysis",
+            "details": "Study Pivot Tables, VLOOKUP/XLOOKUP, and basic statistics functions.",
+            "description": "Study Pivot Tables, VLOOKUP/XLOOKUP, and basic statistics functions.",
+            "importance": "Widely used for quick data cleaning, modeling, and analysis.",
             "resources": [
-                "Tableau Public Academy",
-                "Microsoft Power BI Learning Path"
+                "Excel crash course - YouTube",
+                "Microsoft Excel Support & Training"
             ]
         },
         {
             "week": 4,
-            "topic": "Data Warehousing & ETL Basics",
-            "details": "Understand dimensional modeling, star schemas, and basic ETL pipeline orchestration.",
+            "topic": "Learn Tableau Basics",
+            "goal": "Learn Tableau Basics",
+            "details": "Build interactive charts, filters, and a dashboard in Tableau.",
+            "description": "Build interactive charts, filters, and a dashboard in Tableau.",
+            "importance": "Important for communicating insights visually to business stakeholders.",
             "resources": [
-                "The Data Warehouse Toolkit (Book)",
-                "dbt Fundamentals Course"
+                "Tableau for Beginners - YouTube",
+                "Tableau Training Videos"
+            ]
+        },
+        {
+            "week": 5,
+            "topic": "Learn Power BI Basics",
+            "goal": "Learn Power BI Basics",
+            "details": "Connect data sources and build data models and reports in Power BI.",
+            "description": "Connect data sources and build data models and reports in Power BI.",
+            "importance": "A standard and powerful business intelligence platform tool.",
+            "resources": [
+                "Power BI for Beginners - YouTube",
+                "Power BI Documentation"
+            ]
+        },
+        {
+            "week": 6,
+            "topic": "Learn Basic Statistics",
+            "goal": "Learn Basic Statistics",
+            "details": "Understand mean, median, mode, standard deviation, and hypothesis testing.",
+            "description": "Understand mean, median, mode, standard deviation, and hypothesis testing.",
+            "importance": "Forms the analytical backbone of data decision-making.",
+            "resources": [
+                "OpenIntro Statistics",
+                "Khan Academy Statistics"
+            ]
+        },
+        {
+            "week": 7,
+            "topic": "Master Communication & Presentation",
+            "goal": "Master Communication & Presentation",
+            "details": "Practice presenting data insights clearly and writing summaries.",
+            "description": "Practice presenting data insights clearly and writing summaries.",
+            "importance": "Key to bridging the gap between technical data and business impact.",
+            "resources": [
+                "Product PM Presentation Guides",
+                "Data Storytelling Articles"
+            ]
+        }
+    ],
+    "missing_skills_analysis": [
+        {
+            "skill": "Power BI",
+            "priority": 1,
+            "estimated_time_to_learn": "2 weeks (15 hours)",
+            "free_resources": [
+                {
+                    "name": "Power BI Documentation",
+                    "url": "https://learn.microsoft.com/en-us/power-bi/",
+                    "type": "Documentation"
+                }
+            ]
+        }
+    ],
+    "week_by_week_plan": [
+        {
+            "week": 1,
+            "topics": [
+                "Learn Python Basics"
+            ],
+            "resources": [
+                "Python for Beginners - YouTube Course"
             ]
         }
     ]
 }
-=======
-  "role": "Data Analyst",
-  "weeks": [
-    {
-      "week": 1,
-      "goal": "Learn Python Basics",
-      "description": "Understand variables, loops, lists, dicts, and functions in Python.",
-      "importance": "Crucial for writing automated data scripts and basic manipulation."
-    },
-    {
-      "week": 2,
-      "goal": "Learn SQL Queries",
-      "description": "Master SELECT, WHERE, JOIN, GROUP BY, and basic aggregations in SQL.",
-      "importance": "Essential for querying and extracting data from databases."
-    },
-    {
-      "week": 3,
-      "goal": "Learn Excel Data Analysis",
-      "description": "Study Pivot Tables, VLOOKUP/XLOOKUP, and basic statistics functions.",
-      "importance": "Widely used for quick data cleaning, modeling, and analysis."
-    },
-    {
-      "week": 4,
-      "goal": "Learn Tableau Basics",
-      "description": "Build interactive charts, filters, and a dashboard in Tableau.",
-      "importance": "Important for communicating insights visually to business stakeholders."
-    },
-    {
-      "week": 5,
-      "goal": "Learn Power BI Basics",
-      "description": "Connect data sources and build data models and reports in Power BI.",
-      "importance": "A standard and powerful business intelligence platform tool."
-    },
-    {
-      "week": 6,
-      "goal": "Learn Basic Statistics",
-      "description": "Understand mean, median, mode, standard deviation, and hypothesis testing.",
-      "importance": "Forms the analytical backbone of data decision-making."
-    },
-    {
-      "week": 7,
-      "goal": "Master Communication & Presentation",
-      "description": "Practice presenting data insights clearly and writing summaries.",
-      "importance": "Key to bridging the gap between technical data and business impact."
-    }
-  ]
-}
->>>>>>> fb27e8fa263c4e8e5e262a64d928e58cca4c8081

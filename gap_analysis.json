@@ -1,33 +1,63 @@
 {
-<<<<<<< HEAD
+    "target_role": "Data Analyst",
+    "user_skills": [
+        "SQL",
+        "Python",
+        "Excel",
+        "Tableau"
+    ],
     "readiness_score": 57,
+    "readiness_percentage": 57,
+    "matched_skills": [
+        {
+            "name": "SQL",
+            "importance": "high"
+        },
+        {
+            "name": "Python",
+            "importance": "high"
+        },
+        {
+            "name": "Excel",
+            "importance": "medium"
+        },
+        {
+            "name": "Tableau",
+            "importance": "medium"
+        }
+    ],
     "matching_skills": [
         "SQL",
         "Python",
         "Excel",
         "Tableau"
     ],
+    "skill_gap": [
+        {
+            "name": "Power BI",
+            "importance": "medium"
+        },
+        {
+            "name": "Data Modeling",
+            "importance": "medium"
+        },
+        {
+            "name": "Statistics",
+            "importance": "medium"
+        },
+        {
+            "name": "ETL",
+            "importance": "low"
+        }
+    ],
     "missing_skills": [
         "Power BI",
         "Data Modeling",
         "Statistics",
         "ETL"
-    ]
-}
-=======
-    "target_role": "Data Analyst",
-    "matched_skills": [
-        "SQL",
-        "Python",
-        "Excel"
-    ],
-    "missing_skills": [
-        "Power BI",
-        "Tableau"
     ],
     "recommendations": [
         "Complete a Power BI dashboard visualization project.",
         "Learn advanced Tableau features such as LOD expressions and parameters."
     ]
 }
->>>>>>> fb27e8fa263c4e8e5e262a64d928e58cca4c8081

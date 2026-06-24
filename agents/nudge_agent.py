@@ -212,7 +212,7 @@ def track_and_update_progress(planned_input: str, completed_bool: bool) -> dict:
         "completed_count": len(progress["completed_weeks"])
     }
 
-async def main():
+async def main(planned_input: str = None, completed_input: str = None):
     """
     Main asynchronous orchestrator for running the Nudge Agent CLI.
 
@@ -220,18 +220,25 @@ async def main():
     boots up the Google Antigravity Agent to generate personalized support/nudges
     or falls back to deterministic local processing.
     """
+    # Security: Verify that .env file exists before running
+    if not os.path.exists(".env"):
+        print("[ERROR] Security check failed: .env file does not exist in the root directory.")
+        raise FileNotFoundError("Missing required .env configuration file in the project root.")
+
     # Load dotenv credentials configuration
     load_dotenv()
+    
+    # Security: Ensure all API keys are loaded ONLY from .env file (no hardcoding)
     gemini_key = os.getenv("GEMINI_API_KEY")
     
     print("\n==================================================")
     print("         CareerReady - Nudge Agent CLI            ")
     print("==================================================")
     
-    # Verify career roadmap exists before executing
-    if not os.path.exists("career_roadmap.json"):
-        print("[ERROR] 'career_roadmap.json' is missing. Please create it or place it in the root.")
-        return
+    # Security: Check if career roadmap exists and is not empty before executing
+    if not os.path.exists("career_roadmap.json") or os.path.getsize("career_roadmap.json") == 0:
+        print("[ERROR] Security/Input check failed: 'career_roadmap.json' is missing or empty.")
+        raise FileNotFoundError("career_roadmap.json is missing or empty. Please run career roadmap agent first.")
 
     # 1. Load data to display current pending goals to guide the user
     roadmap = load_career_roadmap("career_roadmap.json")
@@ -245,19 +252,39 @@ async def main():
         
     print("\n--------------------------------------------------")
     
-    # 2. Ask user what they planned to learn this week
-    planned_input = input("\nWhat did you plan to learn this week? ").strip()
+    # 2. Ask user what they planned to learn this week if not passed programmatically
+    if planned_input is None:
+        planned_input = input("\nWhat did you plan to learn this week? ").strip()
+    else:
+        planned_input = planned_input.strip()
+        
+    # Security: Input validation on planned_input (empty and length checks)
     if not planned_input:
-        print("[ERROR] Planned learning goal cannot be empty.")
-        return
+        print("[ERROR] Input validation failed: Planned learning goal cannot be empty.")
+        raise ValueError("Invalid Input: Planned learning goal cannot be empty.")
         
-    # 3. Ask if they completed it
-    completed_input = input("Did you complete it? (yes/no): ").strip().lower()
-    if completed_input not in ["yes", "y", "no", "n"]:
-        print("[ERROR] Invalid response. Please enter 'yes' or 'no'.")
-        return
+    if len(planned_input) > 150:
+        print("[ERROR] Input validation failed: Planned learning goal exceeds maximum length of 150 characters.")
+        raise ValueError("Invalid Input: Planned learning goal exceeds maximum length of 150 characters.")
+
+    import re
+    # Security: Input validation (check for safe characters to prevent code injection/API abuse)
+    if not re.match(r"^[a-zA-Z0-9\s\-\.\,\(\)\&]+$", planned_input):
+        print("[ERROR] Input validation failed: Planned learning goal contains invalid or unsafe characters.")
+        raise ValueError("Invalid Input: Planned learning goal contains invalid characters.")
+
+    # 3. Ask if they completed it if not passed programmatically
+    if completed_input is None:
+        completed_input = input("Did you complete it? (yes/no): ").strip().lower()
+    else:
+        completed_input = str(completed_input).strip().lower()
         
-    completed_bool = completed_input in ["yes", "y"]
+    # Security: Input validation on completed status response
+    if completed_input not in ["yes", "y", "no", "n", "true", "false"]:
+        print("[ERROR] Input validation failed: Invalid completion response. Please enter 'yes' or 'no'.")
+        raise ValueError("Invalid Input: Completion status response must be 'yes' or 'no'.")
+        
+    completed_bool = completed_input in ["yes", "y", "true"]
     
     # Determine whether to use Agent mode or local mode
     use_agent = HAS_ANTIGRAVITY and gemini_key and "your_gemini_api_key_here" not in gemini_key

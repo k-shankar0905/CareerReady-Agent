@@ -208,14 +208,23 @@ def save_gap_analysis(
         matched_skills (list[dict]): List of skills matching the market requirements.
         missing_skills (list[dict]): List of missing market skills ranked by importance.
     """
+    # Security: Verify that internal input arguments are correct types
+    if not isinstance(user_skills, list) or not isinstance(matched_skills, list) or not isinstance(missing_skills, list):
+         logger.error("Input validation failed: user_skills, matched_skills, and missing_skills must be lists.")
+         raise TypeError("Invalid argument types passed to save_gap_analysis.")
+
     # Construct the JSON output dictionary containing all analysis metrics
+    # Supporting both the agent internal structures and dashboard structures
     output_data = {
+        "role": role,
         "target_role": role,
         "user_skills": user_skills,
-        "readiness_score": f"{readiness_score}%",
-        "readiness_percentage": readiness_score,
-        "matched_skills": matched_skills,
-        "skill_gap": missing_skills
+        "readiness_score": readiness_score,  # Integer for dashboard
+        "readiness_percentage": readiness_score,  # Integer for other agents
+        "matched_skills": matched_skills,  # List of dicts for local mode / details
+        "matching_skills": [s.get("name", s) if isinstance(s, dict) else s for s in matched_skills],  # List of strings for dashboard
+        "skill_gap": missing_skills,  # List of dicts for local mode / details
+        "missing_skills": [s.get("name", s) if isinstance(s, dict) else s for s in missing_skills]  # List of strings for dashboard
     }
     
     try:
@@ -272,7 +281,7 @@ def perform_local_analysis(user_skills_input: str) -> dict:
         "missing_skills": ranked_missing
     }
 
-async def main():
+async def main(skills_input: str = None):
     """
     Main entry point for running the Gap Analyzer Agent.
 
@@ -281,9 +290,14 @@ async def main():
     it initiates an Agent session to present the gap analysis with smart, personalized 
     learning recommendations. Otherwise, it runs in purely local CLI mode.
     """
+    # Security: Verify that .env file exists before running
+    if not os.path.exists(".env"):
+        print("[ERROR] Security check failed: .env file does not exist in the root directory.")
+        raise FileNotFoundError("Missing required .env configuration file in the project root.")
+
     # Load configuration environment variables from the standard dotenv (.env) file
     load_dotenv()
-    # Retrieve the Gemini API key from the environment variables to check for connectivity
+    # Security: Ensure all API keys are loaded ONLY from .env file (no hardcoding)
     gemini_key = os.getenv("GEMINI_API_KEY")
     
     # Print welcome banners
@@ -291,18 +305,32 @@ async def main():
     print("      CareerReady - Gap Analyzer Agent CLI        ")
     print("==================================================")
     
-    # Check if the essential input database 'skills_analysis.json' is present
-    if not os.path.exists("skills_analysis.json"):
+    # Security: Check if the essential input database 'skills_analysis.json' is present and not empty
+    if not os.path.exists("skills_analysis.json") or os.path.getsize("skills_analysis.json") == 0:
         # Print error and abort if the file doesn't exist
-        print("[ERROR] 'skills_analysis.json' is missing. Please run job scraping or add skills first.")
-        return
+        print("[ERROR] Security/Input check failed: 'skills_analysis.json' is missing or empty.")
+        raise FileNotFoundError("skills_analysis.json is missing or empty. Please run skills extractor agent first.")
         
-    # Ask the user to input their current skills as a comma-separated list
-    skills_input = input("Enter your current skills (e.g. 'Python, Excel, Tableau'): ").strip()
-    # Ensure input is not empty
+    # Ask the user to input their current skills as a comma-separated list if not supplied programmatically
+    if skills_input is None:
+        skills_input = input("Enter your current skills (e.g. 'Python, Excel, Tableau'): ").strip()
+    else:
+        skills_input = skills_input.strip()
+
+    # Security: Input validation (check not empty and not too long)
     if not skills_input:
-        print("[ERROR] Input skills cannot be empty.")
-        return
+        print("[ERROR] Input validation failed: Input skills cannot be empty.")
+        raise ValueError("Invalid Input: Skills input cannot be empty.")
+        
+    if len(skills_input) > 500:
+        print("[ERROR] Input validation failed: Skills input exceeds maximum length of 500 characters.")
+        raise ValueError("Invalid Input: Skills input exceeds maximum length of 500 characters.")
+
+    import re
+    # Security: Input validation (check for safe characters to prevent code injection/API abuse)
+    if not re.match(r"^[a-zA-Z0-9\s\-\.\,\(\)\&]+$", skills_input):
+        print("[ERROR] Input validation failed: Skills input contains invalid or unsafe characters.")
+        raise ValueError("Invalid Input: Skills input contains invalid characters.")
         
     # Determine whether to use Google Antigravity Agent or fall back to local computation.
     # We use agent if SDK is imported, API key is present and is not placeholder string.

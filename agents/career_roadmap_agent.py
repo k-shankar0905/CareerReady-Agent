@@ -44,7 +44,8 @@ def read_gap_analysis(file_path: str = "gap_analysis.json") -> Dict[str, Any]:
 def save_career_roadmap(roadmap_data: Union[str, Dict[str, Any]], file_path: str = "career_roadmap.json") -> str:
     """
     Saves the generated career roadmap data to a JSON file. Handles both parsed dictionaries
-    and raw JSON strings, ensuring formatting is clean.
+    and raw JSON strings, ensuring formatting is clean, and applies schema normalization
+    to achieve full compatibility with the dashboard and progress tracking.
 
     Args:
         roadmap_data (Union[str, Dict[str, Any]]): The roadmap content to save.
@@ -66,6 +67,65 @@ def save_career_roadmap(roadmap_data: Union[str, Dict[str, Any]], file_path: str
         else:
             # If it is already a dictionary or list, save it directly
             data_to_save = roadmap_data
+
+        # Normalize/format data_to_save to be compatible with both nudge agent and dashboard
+        if isinstance(data_to_save, dict):
+            # Check if week_by_week_plan exists and weeks does not
+            if "week_by_week_plan" in data_to_save and "weeks" not in data_to_save:
+                weeks_list = []
+                for idx, week_plan in enumerate(data_to_save["week_by_week_plan"]):
+                    week_num = week_plan.get("week", idx + 1)
+                    topics = week_plan.get("topics", [])
+                    topic_str = topics[0] if topics else f"Sprint {week_num}"
+                    details_str = ", ".join(topics) if len(topics) > 1 else topic_str
+                    
+                    # Try to map resources to simple string names
+                    raw_resources = week_plan.get("resources", [])
+                    mapped_resources = []
+                    for r in raw_resources:
+                        if isinstance(r, dict):
+                            mapped_resources.append(r.get("name", "Resource"))
+                        else:
+                            mapped_resources.append(str(r))
+
+                    weeks_list.append({
+                        "week": week_num,
+                        "topic": topic_str,
+                        "details": details_str,
+                        "goal": topic_str,
+                        "description": details_str,
+                        "importance": f"Acquiring capabilities in {topic_str} is critical for hiring.",
+                        "resources": mapped_resources
+                    })
+                data_to_save["weeks"] = weeks_list
+            elif "weeks" in data_to_save:
+                # If weeks exists, make sure all fields are populated in each week item
+                for idx, w in enumerate(data_to_save["weeks"]):
+                    w["week"] = w.get("week", idx + 1)
+                    # topic / goal
+                    topic = w.get("topic") or w.get("goal") or f"Week {w['week']} Milestone"
+                    w["topic"] = topic
+                    w["goal"] = topic
+                    # details / description
+                    details = w.get("details") or w.get("description") or f"Study and practice topics for {topic}."
+                    w["details"] = details
+                    w["description"] = details
+                    # importance
+                    w["importance"] = w.get("importance") or f"Important milestone to close target role gaps."
+                    # resources format to string list for dashboard
+                    raw_res = w.get("resources", [])
+                    mapped_res = []
+                    for r in raw_res:
+                        if isinstance(r, dict):
+                            mapped_res.append(r.get("name", "Resource"))
+                        else:
+                            mapped_res.append(str(r))
+                    w["resources"] = mapped_res
+            
+            # Ensure "role" and "target_role" are both populated
+            role = data_to_save.get("target_role") or data_to_save.get("role") or "Target Role"
+            data_to_save["role"] = role
+            data_to_save["target_role"] = role
 
         # Open the output file in write mode with UTF-8 encoding
         with open(file_path, "w", encoding="utf-8") as f:
@@ -244,12 +304,22 @@ async def main():
     saves the results to career_roadmap.json, and prints a final agent response.
     If the agent components are missing or configuration is incomplete, executes locally.
     """
+    # Security: Verify that .env file exists before running
+    if not os.path.exists(".env"):
+        print("[ERROR] Security check failed: .env file does not exist in the root directory.")
+        raise FileNotFoundError("Missing required .env configuration file in the project root.")
+
     # Load environment variables from .env file
     load_dotenv()
 
-    # Retrieve the Gemini API key from environment variables
+    # Security: Ensure all API keys are loaded ONLY from .env file (no hardcoding)
     gemini_key = os.getenv("GEMINI_API_KEY")
     
+    # Security: Validate that gap_analysis.json exists and is not empty before parsing
+    if not os.path.exists("gap_analysis.json") or os.path.getsize("gap_analysis.json") == 0:
+        print("[ERROR] Security/Input check failed: gap_analysis.json does not exist or is empty.")
+        raise FileNotFoundError("gap_analysis.json is missing or empty. Please run gap analyzer agent first.")
+
     # Determine whether we should invoke the Gemini SDK or run deterministically locally
     use_agent = HAS_ANTIGRAVITY and gemini_key and "your_gemini_api_key_here" not in gemini_key
 

@@ -55,7 +55,8 @@ def read_gap_analysis() -> dict:
 
 def save_resume(content: str) -> str:
     """
-    Saves the generated resume content to 'resume_output.txt' in the root workspace directory.
+    Saves the generated resume content to 'resume_output.txt' and 'generated_resume.md'
+    in the root workspace directory.
     
     Args:
         content (str): The plain-text formatted resume content.
@@ -63,14 +64,17 @@ def save_resume(content: str) -> str:
     Returns:
         str: A status message confirming that the resume was saved successfully.
     """
-    file_path = "resume_output.txt"
+    file_paths = ["resume_output.txt", "generated_resume.md"]
+    saved_paths = []
     try:
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(content)
-        logger.info(f"Successfully saved generated resume to '{file_path}'.")
-        return f"Successfully saved the resume to '{file_path}'."
+        for path in file_paths:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(content)
+            saved_paths.append(path)
+        logger.info(f"Successfully saved generated resume to {saved_paths}.")
+        return f"Successfully saved the resume to: {', '.join(saved_paths)}."
     except Exception as e:
-        error_msg = f"Failed to save resume to '{file_path}': {e}"
+        error_msg = f"Failed to save resume: {e}"
         logger.error(error_msg)
         return error_msg
 
@@ -170,21 +174,60 @@ def run_demo_mode(details: dict):
     print(save_msg)
     print("==================================================\n")
 
-async def main():
+async def main(details: dict = None):
     """
     Main asynchronous CLI driver for the Resume Generator Agent.
-    Loads env configurations, prompts user details, initializes the Google ADK Agent with tools,
-    executes the resume generation prompt, and falls back to Demo Mode if key is missing or invalid.
+    Loads env configurations, prompts user details (if not programmatically supplied),
+    initializes the Google ADK Agent with tools, executes the resume generation prompt,
+    and falls back to Demo Mode if key is missing or invalid.
     """
+    # Security: Verify that .env file exists before running
+    if not os.path.exists(".env"):
+        print("[ERROR] Security check failed: .env file does not exist in the root directory.")
+        raise FileNotFoundError("Missing required .env configuration file in the project root.")
+
     # Load env variables from .env file
     load_dotenv()
     
-    # Retrieve Gemini API key from environment
+    # Security: Ensure all API keys are loaded ONLY from .env file (no hardcoding)
     gemini_key = os.getenv("GEMINI_API_KEY")
     
-    # Prompt the user for details first
-    details = prompt_user_details()
+    # Prompt the user for details first if not supplied programmatically
+    if details is None:
+        details = prompt_user_details()
     
+    # Security: Input validation on details fields (empty checks & lengths)
+    required_keys = ["name", "email", "phone", "education", "experience", "skills", "target_role"]
+    for key in required_keys:
+        if key not in details:
+            print(f"[ERROR] Input validation failed: '{key}' is missing in user details.")
+            raise ValueError(f"Invalid Input: User details must contain '{key}'.")
+            
+        details[key] = str(details[key]).strip()
+        if not details[key]:
+            print(f"[ERROR] Input validation failed: User details field '{key}' cannot be empty.")
+            raise ValueError(f"Invalid Input: '{key}' cannot be empty.")
+            
+    if len(details["name"]) > 100:
+        raise ValueError("Name exceeds max length of 100.")
+    if len(details["email"]) > 100 or "@" not in details["email"]:
+        raise ValueError("Email is invalid or exceeds max length of 100.")
+    if len(details["phone"]) > 20:
+        raise ValueError("Phone exceeds max length of 20.")
+    if len(details["education"]) > 200:
+        raise ValueError("Education exceeds max length of 200.")
+    if len(details["experience"]) > 1000:
+        raise ValueError("Experience exceeds max length of 1000.")
+    if len(details["skills"]) > 500:
+        raise ValueError("Skills exceed max length of 500.")
+    if len(details["target_role"]) > 100:
+        raise ValueError("Target Role exceeds max length of 100.")
+
+    # Security: Validate that gap_analysis.json exists and is not empty before parsing
+    if not os.path.exists("gap_analysis.json") or os.path.getsize("gap_analysis.json") == 0:
+        print("[ERROR] Security/Input check failed: gap_analysis.json does not exist or is empty.")
+        raise FileNotFoundError("gap_analysis.json is missing or empty. Please run gap analyzer agent first.")
+
     # Determine if we should start directly in demo mode due to missing key
     is_demo = not gemini_key or "your_" in gemini_key or gemini_key == ""
 

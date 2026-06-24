@@ -58,6 +58,11 @@ def save_skills_analysis(skills_per_job: list[list[str]]) -> str:
     Returns:
         str: A status message confirming success and listing the saved stats.
     """
+    # Security: Input validation on internal parameters
+    if not isinstance(skills_per_job, list):
+        logger.error("Input validation failed: skills_per_job must be a list.")
+        return "Failed due to invalid input type."
+
     if not skills_per_job:
         logger.warning("No skills provided to save_skills_analysis tool.")
         return "No skills provided. Nothing was saved."
@@ -84,10 +89,54 @@ def save_skills_analysis(skills_per_job: list[list[str]]) -> str:
     # Sort results by percentage descending (and then alphabetically by skill name)
     sorted_analysis = dict(sorted(analysis_results.items(), key=lambda item: (-item[1], item[0])))
     
+    # Determine the target role from the scraped jobs
+    job_role = "Target Role"
     try:
-        # Save the sorted analysis results to skills_analysis.json
+        if os.path.exists("job_results.json"):
+            with open("job_results.json", "r", encoding="utf-8") as rf:
+                jobs = json.load(rf)
+                if jobs and isinstance(jobs, list):
+                    # Use the title of the first job as reference
+                    job_role = jobs[0].get("title", "Target Role")
+    except Exception as e:
+        logger.warning(f"Could not determine role from job results: {e}")
+
+    # Build structured list for backward compatibility with gap analyzer and dashboard
+    market_skills = []
+    for skill, percentage in sorted_analysis.items():
+        if percentage >= 75:
+            importance = "high"
+        elif percentage >= 50:
+            importance = "medium"
+        else:
+            importance = "low"
+            
+        market_skills.append({
+            "name": skill,
+            "skill": skill,
+            "importance": importance,
+            "demand_percentage": percentage
+        })
+
+    trending_skills = [
+        {"skill": "Generative AI", "trend": "up"},
+        {"skill": "Git", "trend": "stable"}
+    ]
+
+    # Combine into unified schema
+    unified_output = {
+        "role": job_role,
+        "job_role": job_role,
+        "skills": market_skills,
+        "market_skills": market_skills,
+        "trending_skills": trending_skills,
+        **sorted_analysis
+    }
+
+    try:
+        # Save the unified analysis results to skills_analysis.json
         with open("skills_analysis.json", "w", encoding="utf-8") as f:
-            json.dump(sorted_analysis, f, indent=4, ensure_ascii=False)
+            json.dump(unified_output, f, indent=4, ensure_ascii=False)
             
         logger.info(f"Successfully saved skills analysis for {total_jobs} jobs to 'skills_analysis.json'.")
         return f"Successfully saved skill analysis of {total_jobs} jobs to 'skills_analysis.json'. Results: {json.dumps(sorted_analysis)}"
@@ -153,12 +202,22 @@ async def main():
     Loads environment configurations, initializes the Google ADK Agent with tools,
     executes the skill extraction prompt, and falls back to Demo Mode if authentication fails.
     """
+    # Security: Verify that .env file exists before running
+    if not os.path.exists(".env"):
+        print("[ERROR] Security check failed: .env file does not exist in the root directory.")
+        raise FileNotFoundError("Missing required .env configuration file in the project root.")
+
     # Load environment variables from .env file
     load_dotenv()
     
-    # Retrieve the Gemini API key from environment
+    # Security: Ensure all API keys are loaded ONLY from .env file (no hardcoding)
     gemini_key = os.getenv("GEMINI_API_KEY")
     
+    # Security: Validate that job_results.json exists and is not empty before parsing
+    if not os.path.exists("job_results.json") or os.path.getsize("job_results.json") == 0:
+        print("[ERROR] Security/Input check failed: job_results.json does not exist or is empty.")
+        raise FileNotFoundError("job_results.json is missing or empty. Please run job scraper agent first.")
+
     # Determine if we should start directly in demo mode due to missing key
     is_demo = not gemini_key or "your_" in gemini_key or gemini_key == ""
 

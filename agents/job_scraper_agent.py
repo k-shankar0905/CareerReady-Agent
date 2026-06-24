@@ -126,16 +126,21 @@ def get_mock_jobs(role: str) -> list[dict]:
         })
     return mock_jobs
 
-async def main():
+async def main(role_input: str = None):
     """
     Main asynchronous CLI driver for the Job Scraper Agent.
-    Prompts the user for a job role, configures the Google ADK Agent,
+    Prompts the user for a job role (if not supplied programmatically), configures the Google ADK Agent,
     executes the job search, and saves results to job_results.json.
     """
+    # Security: Verify that .env file exists before running
+    if not os.path.exists(".env"):
+        print("[ERROR] Security check failed: .env file does not exist in the root directory.")
+        raise FileNotFoundError("Missing required .env configuration file in the project root.")
+
     # Load env variables from .env file
     load_dotenv()
     
-    # Retrieve API keys from env
+    # Security: Ensure all API keys are loaded ONLY from .env file (no hardcoding)
     gemini_key = os.getenv("GEMINI_API_KEY")
     rapidapi_key = os.getenv("RAPIDAPI_KEY")
     
@@ -143,20 +148,57 @@ async def main():
     if not gemini_key:
         print("\n[ERROR] GEMINI_API_KEY is not set in your .env file.")
         print("Please copy .env.example to .env and add your Google Gemini API key.")
-        return
+        raise ValueError("Missing GEMINI_API_KEY in environment variables.")
 
-    # Prompt user for the job role to scrape
-    print("\n==================================================")
-    print("      CareerReady - Job Scraper Agent CLI         ")
-    print("==================================================")
-    role_input = input("Enter the job role to search for (e.g., 'Data Analyst'): ").strip()
+    # Prompt user for the job role to scrape if not passed programmatically
+    if role_input is None:
+        print("\n==================================================")
+        print("      CareerReady - Job Scraper Agent CLI         ")
+        print("==================================================")
+        role_input = input("Enter the job role to search for (e.g., 'Data Analyst'): ").strip()
+    else:
+        role_input = role_input.strip()
     
+    # Security: Input validation (check not empty and not too long)
     if not role_input:
-        print("[ERROR] Job role cannot be empty.")
-        return
+        print("[ERROR] Input validation failed: Job role cannot be empty.")
+        raise ValueError("Invalid Input: Job role cannot be empty.")
+        
+    if len(role_input) > 100:
+        print("[ERROR] Input validation failed: Job role exceeds maximum length of 100 characters.")
+        raise ValueError("Invalid Input: Job role exceeds maximum length of 100 characters.")
+
+    import re
+    # Security: Input validation (check for safe characters to prevent code injection/API abuse)
+    if not re.match(r"^[a-zA-Z0-9\s\-\.\,\(\)\&]+$", role_input):
+        print("[ERROR] Input validation failed: Job role contains invalid or unsafe characters.")
+        raise ValueError("Invalid Input: Job role contains invalid characters.")
 
     # Check if JSearch API Key is provided or placeholder
     is_demo = not rapidapi_key or "your_" in rapidapi_key or rapidapi_key == ""
+
+    # Security: Rate limiting check (throttling active scraping to avoid RapidAPI abuse)
+    if not is_demo:
+        rate_limit_file = ".job_scraper_rate_limit"
+        import time
+        if os.path.exists(rate_limit_file):
+            try:
+                with open(rate_limit_file, "r") as rlf:
+                    last_run = float(rlf.read().strip())
+                time_passed = time.time() - last_run
+                if time_passed < 10:
+                    wait_time = 10 - time_passed
+                    logger.warning(f"Security/Rate Limit: API calls are throttled. Please wait {wait_time:.1f} seconds. Sleeping...")
+                    time.sleep(wait_time)
+            except Exception as e:
+                logger.warning(f"Rate limiting check warning: {e}")
+
+        # Update the timestamp file
+        try:
+            with open(rate_limit_file, "w") as rlf:
+                rlf.write(str(time.time()))
+        except Exception as e:
+            logger.warning(f"Rate limiting timestamp update failed: {e}")
 
     # Define the local tool that the agent can execute
     def search_jobs(query: str) -> str:
@@ -222,6 +264,7 @@ async def main():
     except Exception as e:
         logger.error(f"An unexpected error occurred during agent execution: {e}")
         print(f"\n[ERROR] Agent failed to execute: {e}")
+        raise
 
 if __name__ == "__main__":
     import asyncio
