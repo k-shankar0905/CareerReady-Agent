@@ -1,145 +1,263 @@
-# CareerReady Agent Project
+# 🎓 CareerReady Agent
 
-CareerReady is a suite of intelligent command-line agents designed to streamline job search, skill gap analysis, and career readiness assessment. It combines the power of the Google Antigravity SDK (Gemini API) and external APIs to provide personalized career insights.
+> **Know your gap. Close it. Get hired.**
 
----
-
-## Implemented Agents
-
-### 1. Job Scraper Agent (`agents/job_scraper_agent.py`)
-
-#### Description
-The **Job Scraper Agent** searches for active job listings matching a user-specified job role (e.g., "Data Analyst"). It fetches real-time postings using the JSearch API via RapidAPI. If no RapidAPI key is provided, it automatically falls back to generating high-quality mock listings for testing and demo purposes.
-
-#### Input
-* **CLI Input**: Job role or title (e.g., `"Data Analyst"`).
-* **Environment Variables**:
-  * `GEMINI_API_KEY`: Required to execute the Google Antigravity Agent.
-  * `RAPIDAPI_KEY`: Optional. Required to fetch live data; if missing, runs in demo/mock mode.
-
-#### Output
-* **Console**: A high-level response from the Gemini-powered agent summarizing the search result, including total jobs found and examples of hiring companies.
-* **File Output**: Saves structured job listings details to `job_results.json`.
+[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Google ADK](https://img.shields.io/badge/Orchestration-Google%20ADK-red.svg)](https://github.com/google/antigravity)
+[![Model Context Protocol](https://img.shields.io/badge/Protocol-MCP-orange.svg)](https://modelcontextprotocol.io)
+[![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-ff4b4b.svg)](https://streamlit.io/)
 
 ---
 
-### 2. Gap Analyzer Agent (`agents/gap_analyzer_agent.py`)
+## 📌 Problem Statement
 
-#### Description
-The **Gap Analyzer Agent** assesses user readiness for a target job role. It reads requirements from `skills_analysis.json`, prompts the user for their current skills, compares them, calculates a weighted readiness score out of 100, identifies missing skills (ranked by importance), and saves the results. It has a Gemini-powered Agent mode for recommending custom learning plans, and an offline local mode fallback.
-
-#### Input
-* **CLI Input**: Comma-separated list of skills (e.g., `"Python, Excel, Tableau"`).
-* **File Input**: [skills_analysis.json](file:///c:/Users/yamuna/.antigravity-ide/CareerReady-Agent/skills_analysis.json) defining required skills and their importance ("high", "medium", "low").
-* **Environment Variables**:
-  * `GEMINI_API_KEY`: Optional. Used for generating personalized learning recommendations via Gemini; falls back to offline local CLI analysis if not set.
-
-#### Output
-* **Console**: A formatted summary displaying the target role, readiness score status (e.g., `"You are 65% ready for Data Analyst role"`), matched skills, and missing skills ranked by importance.
-* **File Output**: Saves the full breakdown structure to `gap_analysis.json`.
+In today's fast-paced job market, students, career switchers, and job seekers face significant hurdles:
+* **Market Misalignment**: Standard university curriculums and online tutorials rarely align with real-time requirements in active job listings.
+* **Invisible Skills Gap**: Candidates struggle to gauge their readiness level for a target role or identify which skills will give them the highest return on investment (ROI).
+* **Untargeted Resumes**: Job seekers submit generic resumes that fail to highlight the specific competencies employers look for, leading to automated ATS rejections.
+* **Lack of Accountability**: Without a structured learning plan and continuous motivational feedback, self-paced learning journeys often stall.
 
 ---
 
-### 3. Nudge Agent (`agents/nudge_agent.py`)
+## 💡 Solution Overview
 
-#### Description
-The **Nudge Agent** tracks the user's weekly learning progress against a structured career roadmap defined in `career_roadmap.json`. It prompts the user for what they planned to learn, checks if it was completed, updates progress in `progress.json`, gives motivational messages (including why the skill is important if they failed to complete it), and displays the overall roadmap progress percentage.
+**CareerReady Agent** is an end-to-end multi-agent ecosystem designed to act as a personal career concierge. Powered by the **Google Antigravity SDK (Gemini API)** and standard **Model Context Protocol (MCP)** tools, the system automatically analyzes real-time job market postings to guide users through their career preparation journey. 
 
-#### Input
-* **CLI Input**:
-  * Planned learning goal (e.g., `"Python Basics"`).
-  * Completion status (`"yes"`/`"no"`).
-* **File Input**: [career_roadmap.json](file:///c:/Users/yamuna/.antigravity-ide/CareerReady-Agent/career_roadmap.json) defining weekly goals, descriptions, and importance.
-* **Environment Variables**:
-  * `GEMINI_API_KEY`: Optional. Used for generating personalized learning nudges and advice; falls back to offline local CLI analysis if not set.
-
-#### Output
-* **Console**:
-  * Congratulates the user and displays next week's goal on completion.
-  * Motivates the user and displays the skill importance if not completed.
-  * Shows the overall roadmap completion percentage.
-* **File Output**: Updates and saves progress status to `progress.json`.
+The platform operates in a cohesive pipeline:
+1. **Analyze the Market**: Scrape real-time job openings for your target role.
+2. **Identify Competencies**: Standardize and rank skills demanded by employers.
+3. **Assess Readiness**: Quantify your skills gap with a weighted readiness score out of 100.
+4. **Learn and Track**: Generate weekly roadmap milestones and track progress with interactive nudges.
+5. **Optimize Applications**: Produce a custom, ATS-friendly resume tailored to close the gap.
+6. **Integrate Everywhere**: Expose insights to LLM host applications using standard MCP protocols.
 
 ---
 
-## Model Context Protocol (MCP) Servers
+## ✨ Key Features
 
-### Job Market MCP Server (`mcp/job_mcp_server.py`)
-
-#### Description
-An MCP-compliant server called **`job-market-mcp`** implemented using the standard Python `FastMCP` framework. It exposes three tools to any host application (such as Claude Desktop or other Model Context Protocol clients) for querying the job market in real time.
-
-#### Exposed Tools
-1. **`search_jobs(role: str)`**
-   * **Purpose**: Searches for active job postings by job role from the JSearch database.
-   * **Returns**: JSON string list of job details in MCP tool response format.
-2. **`get_trending_skills(role: str)`**
-   * **Purpose**: Analyzes job listings text to identify and rank trending technical and soft skills for a given role.
-   * **Returns**: JSON string listing trending skills and count statistics.
-3. **`get_market_pulse()`**
-   * **Purpose**: Fetches general postings sample to extract broad hiring hubs, top hiring companies, and market demand sentiments.
-   * **Returns**: JSON summary of market health parameters.
+* **Real-time Job Scraping**: Search live openings using the JSearch API (via RapidAPI), with a fallback to realistic mock-generation in demo mode.
+* **AI-Powered Skill Standardization**: Parse unstructured job descriptions to extract clean, standardized technical and soft skill frequencies using Google Gemini.
+* **Weighted Readiness Assessment**: Calculate job readiness based on skill importance levels (High = 3, Medium = 2, Low = 1) and output clear gap summaries.
+* **Personalized AI Career Roadmaps**: Receive priority-ranked learning plans with direct links to free high-quality resources (Coursera, YouTube, official documentation).
+* **Conversational Progress Nudges**: Log weekly progress interactively and receive motivational encouragements explaining why pending skills are important.
+* **ATS-Tailored Resume Builder**: Assemble plain-text resumes highlighting matched competencies and professional summary sections based on the gap analysis.
+* **Model Context Protocol Integration**: Host an MCP FastMCP server exposing tools like `search_jobs`, `get_trending_skills`, and `get_market_pulse`.
+* **Streamlit Visual Dashboard**: A beautiful visual interface to view readiness analytics and progress metrics (in `dashboard/app.py`).
 
 ---
 
-## Dependencies Required
+## 🏗️ Architecture Overview
 
-The project requires **Python 3.8+** and the following dependencies:
+The platform uses a modular, cooperative architecture composed of **6 specialized agents** orchestrated using the Google Antigravity SDK:
 
-* **`requests`**: For contacting the external JSearch API.
-* **`python-dotenv`**: For loading credentials from a local `.env` configuration file.
-* **`mcp`** (FastMCP SDK): Enables Model Context Protocol server capabilities.
-* **`google-antigravity`** (Optional/Standard SDK): Enables agent-based orchestration and LLM chat execution.
+```mermaid
+graph TD
+    A[Job Scraper Agent] -->|job_results.json| B[Skills Extractor Agent]
+    B -->|skills_analysis.json| C[Gap Analyzer Agent]
+    C -->|gap_analysis.json| D[Career Roadmap Agent]
+    C -->|gap_analysis.json| F[Resume Generator Agent]
+    D -->|career_roadmap.json| E[Nudge Agent]
+    E -->|progress.json| G[Streamlit Dashboard / MCP]
+```
 
-Install the python dependencies using `pip`:
-```bash
-pip install requests python-dotenv "mcp[cli]"
+### 1. 🔍 Job Scraper Agent (`agents/job_scraper_agent.py`)
+* **Role**: Collects raw market demand signals.
+* **Function**: Accepts user input for a target role, queries the JSearch API, and writes the raw job posting details (title, company, description, location) to `job_results.json`. Falls back to mock listings if RapidAPI credentials are not present.
+
+### 2. 📊 Skills Extractor Agent (`agents/skills_extractor_agent.py`)
+* **Role**: Structures unstructured data.
+* **Function**: Reads `job_results.json`, uses Gemini to extract and standardize key technical/soft skills across listings, counts occurrences to find market frequencies, and saves a ranked dictionary to `skills_analysis.json`.
+
+### 3. 🎯 Gap Analyzer Agent (`agents/gap_analyzer_agent.py`)
+* **Role**: Computes readiness metrics.
+* **Function**: Prompts the user for their current skill set, loads requirements from `skills_analysis.json`, calculates a weighted readiness score out of 100, separates matched and missing skills, and saves the diagnostic report to `gap_analysis.json`.
+
+### 4. 🗺️ Career Roadmap Agent (`agents/career_roadmap_agent.py`)
+* **Role**: Formulates structured training curricula.
+* **Function**: Reads `gap_analysis.json`, identifies the user's missing skills, structures them by learning priority, compiles free learning resources (documentation, YouTube playlists, Coursera courses), and drafts a week-by-week plan saved in `career_roadmap.json`.
+
+### 5. 🔔 Nudge Agent (`agents/nudge_agent.py`)
+* **Role**: Acts as a virtual accountability coach.
+* **Function**: Prompts the user to report their weekly goal achievements, compares inputs to the week-by-week roadmap, increments completion status in `progress.json`, and outputs AI-driven feedback containing congratulations or reminders of the skill's importance.
+
+### 6. 📝 Resume Generator Agent (`agents/resume_generator_agent.py`)
+* **Role**: Polishes candidate profiles.
+* **Function**: Collects user details (education, experience, current skills) and reads `gap_analysis.json`. Orchestrates a tailored, ATS-friendly plain-text resume emphasizing matched keywords and saves the resulting document in `resume_output.txt`.
+
+---
+
+## 🛠️ Tech Stack
+
+* **Programming Language**: [Python 3.8+](https://www.python.org/)
+* **AI & Agent Orchestration**: [Google ADK (Antigravity SDK)](https://github.com/google/antigravity) (Leveraging Gemini model endpoints)
+* **Model Integration Protocol**: [Model Context Protocol (MCP)](https://github.com/modelcontextprotocol) via standard FastMCP
+* **Development Assistant**: **Antigravity** (Autonomous pairing agent)
+* **Web UI Dashboard**: [Streamlit](https://streamlit.io/) (Visual UI manager)
+
+---
+
+## ⚙️ Environment Variables Needed
+
+The agents require API key configurations to communicate with external APIs. Create a `.env` file in the root directory:
+
+```env
+# Google Gemini API Key (Required for Google Antigravity Agents)
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# JSearch API Key (Optional. If not set, runs in Demo Mode using high-quality mock data)
+RAPIDAPI_KEY=your_rapidapi_key_here
 ```
 
 ---
 
-## Project Setup
+## 📥 Installation Instructions
 
-1. **Clone/Open the Workspace** inside the IDE.
-2. **Configure Environment Variables**:
-   * Copy the `.env.example` file to create a `.env` file in the project root:
-     ```bash
-     cp .env.example .env
-     ```
-   * Open the `.env` file and insert your API keys:
-     ```env
-     GEMINI_API_KEY=your_actual_gemini_api_key
-     RAPIDAPI_KEY=your_actual_rapidapi_key
-     ```
+### 1. Clone the Repository
+```bash
+git clone https://github.com/k-shankar0905/CareerReady-Agent.git
+cd CareerReady-Agent
+```
+
+### 2. Set Up a Virtual Environment
+**On Windows:**
+```powershell
+python -m venv venv
+venv\Scripts\activate
+```
+**On macOS/Linux:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+# If requirements.txt is not yet generated, install core dependencies:
+pip install requests python-dotenv streamlit mcp "mcp[cli]" google-antigravity
+```
+
+### 4. Configure Your Keys
+Copy the example template file and insert your active API keys:
+```bash
+cp .env.example .env
+```
 
 ---
 
-## How to Run the Project
+## 🚀 How to Run
 
-### 1. Run the Job Scraper Agent
-To scrape job postings for a role (e.g., "Data Analyst") and save them to `job_results.json`:
-```bash
-python agents/job_scraper_agent.py
-```
-*Follow the interactive prompt to type your target role.*
+### Phase 1: Market Intelligence & Skills Extraction
+1. **Run the Job Scraper Agent**:
+   ```bash
+   python agents/job_scraper_agent.py
+   ```
+   *Prompt: Type your target role (e.g., `Data Analyst`). Output saved to `job_results.json`.*
 
-### 2. Run the Gap Analyzer Agent
-To analyze your skills gap against the market requirements loaded from `skills_analysis.json`:
-```bash
-python agents/gap_analyzer_agent.py
-```
-*Follow the prompt to input your current skills (e.g., `Python, Excel, Tableau`).*
+2. **Run the Skills Extractor Agent**:
+   ```bash
+   python agents/skills_extractor_agent.py
+   ```
+   *Extracts and ranks industry competencies. Output saved to `skills_analysis.json`.*
 
-### 3. Run the Nudge Agent
-To track your learning progress against your roadmap:
-```bash
-python agents/nudge_agent.py
-```
-*Follow the prompt to enter what you planned to learn and if you completed it.*
+---
 
-### 4. Run the Job Market MCP Server
-To boot up the Model Context Protocol stdio transport server:
-```bash
-python mcp/job_mcp_server.py
+### Phase 2: User Analysis & Learning Path
+3. **Run the Gap Analyzer Agent**:
+   ```bash
+   python agents/gap_analyzer_agent.py
+   ```
+   *Prompt: Enter your current skills (e.g., `Python, Excel`). Output saved to `gap_analysis.json`.*
+
+4. **Run the Career Roadmap Agent**:
+   ```bash
+   python agents/career_roadmap_agent.py
+   ```
+   *Generates prioritized week-by-week curriculum links. Output saved to `career_roadmap.json`.*
+
+---
+
+### Phase 3: Accountability & Application Delivery
+5. **Track Progress with the Nudge Agent**:
+   ```bash
+   python agents/nudge_agent.py
+   ```
+   *Interactively logs achievements. Updates saved to `progress.json`.*
+
+6. **Generate a Tailored Resume**:
+   ```bash
+   python agents/resume_generator_agent.py
+   ```
+   *Tailors profile elements. Plain-text ATS-friendly resume output saved to `resume_output.txt`.*
+
+---
+
+### Phase 4: Interface & Protocol Hosting
+7. **Run the Model Context Protocol (MCP) Server**:
+   ```bash
+   python mcp/job_mcp_server.py
+   ```
+   *Runs the stdio transport server. Register this server in your Claude Desktop configuration (`claude_desktop_config.json`):*
+   ```json
+   {
+     "mcpServers": {
+       "job-market-mcp": {
+         "command": "python",
+         "args": ["c:/Users/yamuna/.antigravity-ide/CareerReady-Agent/mcp/job_mcp_server.py"]
+       }
+     }
+   }
+   ```
+
+8. **Run the Streamlit Dashboard**:
+   ```bash
+   streamlit run dashboard/app.py
+   ```
+   *Launches the browser-based visualization page showing your roadmaps, progress, and market charts.*
+
+---
+
+## 📂 Project Structure
+
 ```
-*Note: This server communicates over standard input/output (stdio) and should be registered in your client configuration (e.g., `claude_desktop_config.json`).*
+CareerReady-Agent/
+├── agents/
+│   ├── career_roadmap_agent.py    # Generates personalized learning paths
+│   ├── gap_analyzer_agent.py      # Analyzes readiness score and skill gap
+│   ├── job_scraper_agent.py       # Scrapes JSearch API / falls back to mock jobs
+│   ├── nudge_agent.py             # Tracks learning progress with custom nudges
+│   ├── resume_generator_agent.py  # Builds tailored ATS-friendly resumes
+│   └── skills_extractor_agent.py  # Extracts/standardizes skills from jobs
+├── dashboard/
+│   └── app.py                     # Streamlit dashboard interface
+├── mcp/
+│   └── job_mcp_server.py          # FastMCP server exposing job market tools
+├── skills/
+│   └── SKILL.md                   # Skills markdown documentation
+├── .env                           # Environment variables configuration
+├── .env.example                   # Template for environment variables
+├── career_roadmap.json            # Generated roadmap data
+├── gap_analysis.json              # Generated gap analysis reports
+├── job_results.json               # Raw scraped job postings
+├── progress.json                  # Weekly progress tracking database
+├── resume_output.txt              # Tailored ATS text resume output
+├── skills_analysis.json           # Extracted skill statistics
+├── main.py                        # Main entry point (placeholder)
+└── README.md                      # Project documentation (this file)
+```
+
+---
+
+## 👥 Team Members
+
+* 🎓 **Jashmitha**
+* 🎓 **Yamuna**
+* 🎓 **Shankar**
+* 🎓 **Aashritha**
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
