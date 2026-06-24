@@ -251,10 +251,10 @@ CareerReady-Agent/
 
 ## 👥 Team Members
 
-* 🎓 **Jashmitha**
-* 🎓 **Yamuna**
-* 🎓 **Shankar**
-* 🎓 **Aashritha**
+* 🎓 **Kothapalli Gowri Shankar**
+* 🎓 **Miriyala Jashmitha**
+* 🎓 **Maddu Yamuna**
+* 🎓 **Maddela Aashritha**
 
 ---
 
