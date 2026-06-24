@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "weeks": [
         {
             "week": 1,
@@ -38,3 +39,51 @@
         }
     ]
 }
+=======
+  "role": "Data Analyst",
+  "weeks": [
+    {
+      "week": 1,
+      "goal": "Learn Python Basics",
+      "description": "Understand variables, loops, lists, dicts, and functions in Python.",
+      "importance": "Crucial for writing automated data scripts and basic manipulation."
+    },
+    {
+      "week": 2,
+      "goal": "Learn SQL Queries",
+      "description": "Master SELECT, WHERE, JOIN, GROUP BY, and basic aggregations in SQL.",
+      "importance": "Essential for querying and extracting data from databases."
+    },
+    {
+      "week": 3,
+      "goal": "Learn Excel Data Analysis",
+      "description": "Study Pivot Tables, VLOOKUP/XLOOKUP, and basic statistics functions.",
+      "importance": "Widely used for quick data cleaning, modeling, and analysis."
+    },
+    {
+      "week": 4,
+      "goal": "Learn Tableau Basics",
+      "description": "Build interactive charts, filters, and a dashboard in Tableau.",
+      "importance": "Important for communicating insights visually to business stakeholders."
+    },
+    {
+      "week": 5,
+      "goal": "Learn Power BI Basics",
+      "description": "Connect data sources and build data models and reports in Power BI.",
+      "importance": "A standard and powerful business intelligence platform tool."
+    },
+    {
+      "week": 6,
+      "goal": "Learn Basic Statistics",
+      "description": "Understand mean, median, mode, standard deviation, and hypothesis testing.",
+      "importance": "Forms the analytical backbone of data decision-making."
+    },
+    {
+      "week": 7,
+      "goal": "Master Communication & Presentation",
+      "description": "Practice presenting data insights clearly and writing summaries.",
+      "importance": "Key to bridging the gap between technical data and business impact."
+    }
+  ]
+}
+>>>>>>> fb27e8fa263c4e8e5e262a64d928e58cca4c8081

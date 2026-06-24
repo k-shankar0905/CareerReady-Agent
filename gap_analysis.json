@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "readiness_score": 57,
     "matching_skills": [
         "SQL",
@@ -13,3 +14,20 @@
         "ETL"
     ]
 }
+=======
+    "target_role": "Data Analyst",
+    "matched_skills": [
+        "SQL",
+        "Python",
+        "Excel"
+    ],
+    "missing_skills": [
+        "Power BI",
+        "Tableau"
+    ],
+    "recommendations": [
+        "Complete a Power BI dashboard visualization project.",
+        "Learn advanced Tableau features such as LOD expressions and parameters."
+    ]
+}
+>>>>>>> fb27e8fa263c4e8e5e262a64d928e58cca4c8081

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "job_role": "Data Analyst",
     "market_skills": [
         {
@@ -49,3 +50,37 @@
         }
     ]
 }
+=======
+  "role": "Data Analyst",
+  "skills": [
+    {
+      "name": "Python",
+      "importance": "high"
+    },
+    {
+      "name": "SQL",
+      "importance": "high"
+    },
+    {
+      "name": "Excel",
+      "importance": "medium"
+    },
+    {
+      "name": "Tableau",
+      "importance": "medium"
+    },
+    {
+      "name": "Power BI",
+      "importance": "medium"
+    },
+    {
+      "name": "Statistics",
+      "importance": "medium"
+    },
+    {
+      "name": "Communication",
+      "importance": "low"
+    }
+  ]
+}
+>>>>>>> fb27e8fa263c4e8e5e262a64d928e58cca4c8081
