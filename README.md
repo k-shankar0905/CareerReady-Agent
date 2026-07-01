@@ -243,7 +243,7 @@ CareerReady-Agent/
 ├── progress.json                  # Weekly progress tracking database
 ├── resume_output.txt              # Tailored ATS text resume output
 ├── skills_analysis.json           # Extracted skill statistics
-├── main.py                        # Main entry point (placeholder)
+├── main.py                        # Reserved for future unified CLI entry point (not yet implemented)
 └── README.md                      # Project documentation (this file)
 ```
 
