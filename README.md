@@ -204,7 +204,7 @@ cp .env.example .env
      "mcpServers": {
        "job-market-mcp": {
          "command": "python",
-         "args": ["c:/Users/yamuna/.antigravity-ide/CareerReady-Agent/mcp/job_mcp_server.py"]
+         "args": ["<path-to-repo>/mcp/job_mcp_server.py"]
        }
      }
    }
